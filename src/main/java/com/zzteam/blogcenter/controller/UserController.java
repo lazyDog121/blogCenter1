@@ -6,6 +6,7 @@ import com.zzteam.blogcenter.model.domain.User;
 import com.zzteam.blogcenter.model.domain.request.UserLoginRequest;
 import com.zzteam.blogcenter.model.domain.request.UserRegisterRequest;
 import com.zzteam.blogcenter.service.UserService;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +27,8 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/register")
-    public R userRegister(@RequestBody UserRegisterRequest usrRegister){
+    @ApiOperation("注册")
+    public R userRegister(@ModelAttribute UserRegisterRequest usrRegister){
         if (usrRegister == null){
             return R.error("数据为空");
         }
@@ -36,7 +38,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public R userLogin(@RequestBody UserLoginRequest userLogin, HttpServletRequest request){
+    @ApiOperation("登录")
+    public R userLogin(@ModelAttribute UserLoginRequest userLogin, HttpServletRequest request){
         if (userLogin == null){
             return R.error("数据为空");
         }
@@ -47,6 +50,7 @@ public class UserController {
     }
 
     @PostMapping("/search")
+    @ApiOperation("管理员查询用户")
     public R searchUsers(String username, HttpServletRequest request){
         //仅管理员可查
         if (!isAdmin(request)){
@@ -62,6 +66,7 @@ public class UserController {
 
 
     @DeleteMapping("/delete/{id}")
+    @ApiOperation("管理员删除用户")
     public R userDel(@PathVariable long id, HttpServletRequest request){
         //仅管理员可删
         if (!isAdmin(request)){//如果不是管理员

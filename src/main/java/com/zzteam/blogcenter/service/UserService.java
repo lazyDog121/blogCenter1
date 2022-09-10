@@ -21,8 +21,7 @@ public interface UserService extends IService<User> {
 
     /**
      * 用户登录方法
-     * @param userAccount 用户账户
-     * @param userPassWord 用户密码
+     * @param userLogin
      * @param request
      * @return
      */
