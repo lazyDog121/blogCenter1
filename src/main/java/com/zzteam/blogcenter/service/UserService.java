@@ -1,6 +1,7 @@
 package com.zzteam.blogcenter.service;
 
-import com.zzteam.blogcenter.controller.utils.R;
+import com.zzteam.blogcenter.model.domain.request.UserLoginRequest;
+import com.zzteam.blogcenter.utils.R;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zzteam.blogcenter.model.domain.User;
 
@@ -21,11 +22,11 @@ public interface UserService extends IService<User> {
     /**
      * 用户登录方法
      * @param userAccount 用户账户
-     * @param passWord 用户密码
+     * @param userPassWord 用户密码
      * @param request
      * @return
      */
-    R UserLogin(String userAccount, String passWord, HttpServletRequest request);
+    R userLogin(UserLoginRequest userLogin, HttpServletRequest request);
 
     /**
      * 用户脱敏

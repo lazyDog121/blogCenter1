@@ -1,10 +1,10 @@
 package com.zzteam.blogcenter.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.zzteam.blogcenter.controller.utils.R;
+import com.zzteam.blogcenter.utils.R;
 import com.zzteam.blogcenter.model.domain.User;
-import com.zzteam.blogcenter.model.domain.request.userLoginRequest;
-import com.zzteam.blogcenter.model.domain.request.userRegisterRequest;
+import com.zzteam.blogcenter.model.domain.request.UserLoginRequest;
+import com.zzteam.blogcenter.model.domain.request.UserRegisterRequest;
 import com.zzteam.blogcenter.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +26,7 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/register")
-    public R userRegister(@RequestBody userRegisterRequest usrRegister){
+    public R userRegister(@RequestBody UserRegisterRequest usrRegister){
         if (usrRegister == null){
             return R.error("数据为空");
         }
@@ -35,14 +35,15 @@ public class UserController {
         return userService.UserRegister(userAccount, userPassword);
     }
 
-    @GetMapping("/login")
-    public R userLogin(@RequestBody userLoginRequest usrLogin, HttpServletRequest request){
-        if (usrLogin == null){
+    @PostMapping("/login")
+    public R userLogin(@RequestBody UserLoginRequest userLogin, HttpServletRequest request){
+        if (userLogin == null){
             return R.error("数据为空");
         }
-        String userAccount = usrLogin.getUserAccount();
-        String userPassword = usrLogin.getUserPassword();
-        return userService.UserLogin(userAccount, userPassword, request);
+//        String userAccount = userLogin.getUserAccount();
+//        String userPassword = userLogin.getUserPassword();
+        //不用心急取出
+        return userService.userLogin(userLogin, request);
     }
 
     @PostMapping("/search")

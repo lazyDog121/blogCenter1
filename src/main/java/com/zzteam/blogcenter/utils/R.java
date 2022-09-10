@@ -1,4 +1,4 @@
-package com.zzteam.blogcenter.controller.utils;
+package com.zzteam.blogcenter.utils;
 
 import lombok.Data;
 

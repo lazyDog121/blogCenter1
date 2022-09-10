@@ -2,7 +2,8 @@ package com.zzteam.blogcenter.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zzteam.blogcenter.controller.utils.R;
+import com.zzteam.blogcenter.model.domain.request.UserLoginRequest;
+import com.zzteam.blogcenter.utils.R;
 import com.zzteam.blogcenter.model.domain.User;
 import com.zzteam.blogcenter.service.UserService;
 import com.zzteam.blogcenter.Mapper.UserMapper;
@@ -71,18 +72,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public R UserLogin(String userAccount, String passWord, HttpServletRequest request) {
+    public R userLogin(UserLoginRequest userLogin, HttpServletRequest request) {
+        String userAccount = userLogin.getUserAccount();
+        String userPassword = userLogin.getUserPassword();
         //1.不为空
-        if (StringUtils.isAnyBlank(userAccount, passWord)){
+        if (StringUtils.isAnyBlank(userAccount, userPassword)){
             return R.error("账号、密码不能为空");
         }
         //2.验证密码位数大于6小于12
-        if (passWord.length() < 6 || passWord.length() > 12){
+        if (userPassword.length() < 6 || userPassword.length() > 12){
             return R.error("密码位数错误");
         }
         //3.验证账户存在
         //加密
-        String sed = DigestUtils.md5DigestAsHex((SALT + passWord).getBytes());
+        String sed = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
         userQueryWrapper.eq("userAccount", userAccount);
         userQueryWrapper.eq("userPassword", sed);
