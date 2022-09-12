@@ -3,6 +3,7 @@ package com.zzteam.blogcenter.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zzteam.blogcenter.model.domain.request.UserLoginRequest;
+import com.zzteam.blogcenter.model.domain.request.UserRegisterRequest;
 import com.zzteam.blogcenter.utils.R;
 import com.zzteam.blogcenter.model.domain.User;
 import com.zzteam.blogcenter.service.UserService;
@@ -35,15 +36,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     private static final String SALT = "zj";
 
     @Override
-    public R UserRegister(String userAccount, String passWord) {
+    public R<User> UserRegister(UserRegisterRequest usrRegister) {
+        String userAccount = usrRegister.getUserAccount();
+        String userPassword = usrRegister.getUserPassword();
         User user = new User();
         //简单验证即可
         //1.验证不为空
-        if (StringUtils.isAnyBlank(userAccount, passWord)){
+        if (StringUtils.isAnyBlank(userAccount, userPassword)){
             return R.error("数据为空");
         }
         //2.验证密码位数大于6小于12
-        if (passWord.length() < 6 || passWord.length() > 12){
+        if (userPassword.length() < 6 || userPassword.length() > 12){
             return R.error("密码位数错误");
         }
         // 3.账户不能包含特殊字符
@@ -61,18 +64,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
 
         //加密
-        String s = DigestUtils.md5DigestAsHex((SALT + passWord).getBytes());
+        String s = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
         user.setUserAccount(userAccount);
         user.setUserPassword(s);
         boolean save = this.save(user);
         if (!save){
             return R.error("用户注册失败，请重试！");
         }
-        return R.success("注册成功");
+        User safetyUser = getSafetyUser(user);
+        return R.success(safetyUser);
     }
 
     @Override
-    public R userLogin(UserLoginRequest userLogin, HttpServletRequest request) {
+    public R<User> userLogin(UserLoginRequest userLogin, HttpServletRequest request) {
         String userAccount = userLogin.getUserAccount();
         String userPassword = userLogin.getUserPassword();
         //1.不为空
@@ -109,6 +113,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     public User getSafetyUser(User user){
         //返回脱敏后的用户信息
         User safetyuser = new User();
+        safetyuser.setId(user.getId());
         safetyuser.setUsername(user.getUsername());
         safetyuser.setUserAccount(user.getUserAccount());
         safetyuser.setAvatarUrl(user.getAvatarUrl());

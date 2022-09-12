@@ -32,9 +32,7 @@ public class UserController {
         if (usrRegister == null){
             return R.error("数据为空");
         }
-        String userAccount = usrRegister.getUserAccount();
-        String userPassword = usrRegister.getUserPassword();
-        return userService.UserRegister(userAccount, userPassword);
+        return userService.UserRegister(usrRegister);
     }
 
     @PostMapping("/login")
@@ -43,9 +41,6 @@ public class UserController {
         if (userLogin == null){
             return R.error("数据为空");
         }
-//        String userAccount = userLogin.getUserAccount();
-//        String userPassword = userLogin.getUserPassword();
-        //不用心急取出
         return userService.userLogin(userLogin, request);
     }
 
@@ -82,6 +77,23 @@ public class UserController {
     }
 
     /**
+     * 用户退出登录
+     * @return
+     */
+    @PostMapping("/logout")
+    @ApiOperation("用户退出登录")
+    public R<String> logout(HttpServletRequest request){
+        //清理Session中保存的当前登录用户的信息
+        request.getSession().removeAttribute("id");
+        request.getSession().removeAttribute("userAccount");
+        request.getSession().removeAttribute("createTime");
+        request.getSession().removeAttribute("updateTime");
+        request.getSession().removeAttribute("isDelete");
+        request.getSession().removeAttribute("userRole");
+        return R.success("退出成功");
+    }
+
+    /**
      * 是否为管理员
      * @param request
      * @return
@@ -92,7 +104,5 @@ public class UserController {
         //0为普通用户，ADMIN_ROLE为管理员
         return user != null && user.getUserRole() == ADMIN_ROLE;
     }
-
-
 
 }

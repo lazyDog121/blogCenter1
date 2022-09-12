@@ -1,6 +1,7 @@
 package com.zzteam.blogcenter.service;
 
 import com.zzteam.blogcenter.model.domain.request.UserLoginRequest;
+import com.zzteam.blogcenter.model.domain.request.UserRegisterRequest;
 import com.zzteam.blogcenter.utils.R;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zzteam.blogcenter.model.domain.User;
@@ -13,11 +14,10 @@ import javax.servlet.http.HttpServletRequest;
 public interface UserService extends IService<User> {
     /**
      * 用户注册
-     * @param userAccount
-     * @param passWord
+     * @param usrRegister
      * @return
      */
-    R UserRegister(String userAccount, String passWord);
+    R<User> UserRegister(UserRegisterRequest usrRegister);
 
     /**
      * 用户登录方法
@@ -25,7 +25,7 @@ public interface UserService extends IService<User> {
      * @param request
      * @return
      */
-    R userLogin(UserLoginRequest userLogin, HttpServletRequest request);
+    R<User> userLogin(UserLoginRequest userLogin, HttpServletRequest request);
 
     /**
      * 用户脱敏
